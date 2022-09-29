@@ -1,8 +1,7 @@
 {
     "dda.py": "https://raw.githubusercontent.com/XtremeTHN/dda_python/main/dda.py",
-    ".modules/updatelib.py": "https://raw.githubusercontent.com/XtremeTHN/dda_python/main/modules/updatelib.py",
-    ".modules/repo.json": "https://raw.githubusercontent.com/XtremeTHN/dda_python/main/modules/repo.json",
-    ".linux/functions.py": "https://raw.githubusercontent.com/XtremeTHN/dda_python/main/linux/functions.py",
-    ".windows/functions.py": "https://raw.githubusercontent.com/XtremeTHN/dda_python/main/windows/functions.py",
-    "version": "1"
+    "modules/updatelib.py": "https://raw.githubusercontent.com/XtremeTHN/dda_python/main/modules/updatelib.py",
+    "modules/repo.json": "https://raw.githubusercontent.com/XtremeTHN/dda_python/main/modules/repo.json",
+    "linux/functions.py": "https://raw.githubusercontent.com/XtremeTHN/dda_python/main/linux/functions.py",
+    "windows/functions.py": "https://raw.githubusercontent.com/XtremeTHN/dda_python/main/windows/functions.py"
 }
