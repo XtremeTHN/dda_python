@@ -24,10 +24,9 @@ class updatelib:
         else:
             raise TypeError("Dict type expected, {} was given".format(type(url)))
 
-    def get_dict_of_files(url, quiet=False):
+    def get_dict_of_files(url):
         if isinstance(url, str):
-            if not quiet:
-                print("Comprobando actualizaciones...")
+            print("Comprobando actualizaciones...")
             updated_files = requests.get(url)
             return updated_files.content
         else:
