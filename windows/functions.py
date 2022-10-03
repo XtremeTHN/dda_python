@@ -40,7 +40,8 @@ def main(sprint, package, dat):
             elif choice == 'N' or 'n':
                 sprint('WARN', 'No instalar dependencias puede resultar a un error, obtendras las dependencias que necesitas si vuelves a ejecutar dda con "-pi" y especificando el paquete', Colors.red_to_blue)
                 sprint('INFO', 'Descomprimiendo...', Colors.blue_to_purple)
-                zip.extractall(json.load(open(os.path.join(dirx,package,'info.json'), 'r'))['dest_linux'].replace('~', str(Path.home())))
+                path = json.load(open(os.path.join(dirx,package,'info.json'), 'r'))['dest_windows'].replace('/', '\\')
+                zip.extractall()
     except:
         raise IOError('Error en la creación del archivo')
     finally:
