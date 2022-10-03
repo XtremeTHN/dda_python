@@ -56,10 +56,11 @@ def main(sprint, package, dat):
     with open('modules/apps_installed.json', 'w') as file:
         data['pkgs'][package] = os.path.join(dirx,package,'info.json')
         json.dump(data, file,indent=4)
-    sprint('CLEAN', 'Limpiando...', Colors.green_to_blue)
-    for x in glob.glob(os.path.join(dirx, '*')):
+    sprint('CLEAN', f'Por ahora limpiar la carpeta cache en windows no es posible, puedes eliminarla al ir a {dirx}', Colors.green_to_blue)
+    """for x in glob.glob(os.path.join(dirx, '*')):
         try:
             os.remove(x)
         except IsADirectoryError:
             shutil.rmtree(x)
+    """
     sprint('SUCCESS', 'Instalado correctamente!', Colors.blue_to_purple)
