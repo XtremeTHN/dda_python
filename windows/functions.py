@@ -2,7 +2,7 @@ from pystyle import Colorate, Colors
 from pathlib import Path
 from zipfile import ZipFile
 import requests, json
-import os
+import os, shutil, glob
 def main(sprint, package, dat):
     sprint('INFO', 'Paquete encontrado...', Colors.blue_to_purple)
     sprint('DOWN', 'Obteniendo el tamaño del archivo...', Colors.blue_to_green)
@@ -20,7 +20,7 @@ def main(sprint, package, dat):
         with open('{}'.format(os.path.join(dirx, package + '_pkg_cache.dda')), 'wb') as file:
             file.write(down.content)
         with ZipFile(os.path.join(dirx, package + '_pkg_cache.dda'), 'r') as zip:
-            zip.extract('mrw10/info.json', dirx)
+            zip.extract(package + '/info.json', dirx)
             sprint('INFO', 'Deseas instalar las dependencias? (Y/N): ', Colors.blue_to_purple, endx='')
             choice = input()
             if choice == 'Y':
@@ -40,9 +40,27 @@ def main(sprint, package, dat):
             elif choice == 'N' or 'n':
                 sprint('WARN', 'No instalar dependencias puede resultar a un error, obtendras las dependencias que necesitas si vuelves a ejecutar dda con "-pi" y especificando el paquete', Colors.red_to_blue)
                 sprint('INFO', 'Descomprimiendo...', Colors.blue_to_purple)
-                path = json.load(open(os.path.join(dirx,package,'info.json'), 'r'))['dest_windows'].replace('/', '\\')
-                zip.extractall()
+                pathx = json.load(open(os.path.join(dirx,package,'info.json'), 'r'))['dest_windows'].replace('/', '\\')
+                zip.extractall(path=pathx)
     except:
         raise IOError('Error en la creación del archivo')
     finally:
         os.remove(os.path.join(dirx, package + '_pkg_cache.dda'))
+    blank = open('modules/apps_installed.json', 'w')
+    blank.write("")
+    with open('modules/apps_installed.json', 'w+') as file:
+        info = []
+        data = json.load(file)
+        with open(os.path.join(dirx,package,'info.json'),'r') as f:
+            new_path = json.load(f)
+            info.append(new_path['dest_windows'])
+            info.append(new_path['dependency'])
+        data['pkgs'][package] = info
+        json.dump(data, file,indent=4)
+    sprint('CLEAN', 'Limpiando...', Colors.green_to_blue)
+    for x in glob.glob(os.path.join(dirx, '*')):
+        try:
+            os.remove(x)
+        except IsADirectoryError:
+            shutil.rmtree(x)
+    sprint('SUCCESS', 'Instalado correctamente!', Colors.blue_to_purple)
