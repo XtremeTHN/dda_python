@@ -1,10 +1,10 @@
-import requests
+import requests, sys
 from pystyle import Colorate, Colors
 from modules.updatelib import updatelib
 import argparse, json
-def sprint(category,text, color):
+def sprint(category,text, color, endx='\n'):
     print(Colorate.Horizontal(color, f'[{category}]'), end='')
-    print(f' {text}')
+    print(f' {text}', end=endx)
 
 parser = argparse.ArgumentParser(description="Administrador de paquetes thn22yt.blogspot.com")
 parser.add_argument('-u', '--update', action='store_true', dest='upd_opt',
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     if objects.upd_opt:
         sprint("INFO", "Checando actualizaciones...", Colors.blue_to_red)
         new_ver = json.loads(updatelib.get_dict_of_files('https://raw.githubusercontent.com/XtremeTHN/dda_python/main/modules/repo-stable.json', quiet=True).decode("utf-8"))['version']
-        if float(new_ver) >= 1:
+        if float(new_ver) >= 2:
             sprint("INFO", "Actualizacion disponible", Colors.blue_to_red)
             sprint("UPDATE", "Descargando...", Colors.blue_to_green)
             with open('modules/repo-stable.json','r') as file:
@@ -37,9 +37,7 @@ if __name__ == "__main__":
                     with open(x, 'wb') as f:
                         f.write(file_data.content)
             sprint("SUCCESS", "Actualización hecha", Colors.blue_to_purple)
-    from pathlib import Path
-    from zipfile import ZipFile
-    import os
+    
     if objects.inst_opt == 'web':
         with open('modules/repo.json','r') as file:
             dat = json.load(file)
@@ -47,29 +45,14 @@ if __name__ == "__main__":
         for x in dat['utilities']:
             if x != objects.pkg:
                 sprint('ERROR', 'El paquete que usted solicitó no se encontró, revise si lo ha escrito correctamente')
+                finded_package = False
             else:
-                sprint('INFO', 'Paquete encontrado...', Colors.blue_to_purple)
-                sprint('DOWN', 'Obteniendo el tamaño del archivo...', Colors.blue_to_green)
-                resp = requests.get(dat['utilities'][x])
-                size = float(resp.headers['content-length'])/1048576
-                sprint('DOWN', 'Tamaño= '+str(size)[0:5]+' MB', Colors.blue_to_green)
-                sprint('DOWN', 'Descargando...', Colors.blue_to_green)
-                down = requests.get(dat['utilities'][x])
-                sprint('SUCCESS', 'Descargado!', Colors.blue_to_purple)
-                dirx = os.path.join(Path.home(), '.cache', 'dda')
-                if not os.path.exists(dirx):
-                    os.mkdir(dirx)
-                try:
-                    with open('{}'.format(os.path.join(dirx, x + '_pkg_cache.dda')), 'wb') as file:
-                        file.write(down.content)
-                    with ZipFile(os.path.join(dirx, x + '_pkg_cache.dda'), 'r') as zip:
-                        sprint('INFO', 'Descomprimiendo...', Colors.blue_to_purple)
-                        zip.extract('info.json', dirx)
-                        zip.extractall(json.load(open(os.path.join(dirx,'info.json'), 'r'))['dest_linux'].replace('~', Path.home()))
-                except:
-                    raise IOError('Error en la creación del archivo')
-                finally:
-                    os.remove(os.path.join(dirx, x + '_pkg_cache.dda'))
-                sprint('INFO', 'Revisando dependencias...', Colors.blue_to_purple)
-
+                finded_package = True
+                package = x
+        if finded_package:
+            if sys.platform == 'linux':
+                import linux.functions as functions
+            elif sys.platform == 'win32':
+                import windows.functions as functions
+            functions.main(sprint,package,dat)
 
