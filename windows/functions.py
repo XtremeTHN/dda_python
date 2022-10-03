@@ -46,16 +46,15 @@ def main(sprint, package, dat):
         raise IOError('Error en la creación del archivo')
     finally:
         os.remove(os.path.join(dirx, package + '_pkg_cache.dda'))
-    blank = open('modules/apps_installed.json', 'w')
-    blank.write("")
-    with open('modules/apps_installed.json', 'w+') as file:
+    
+    with open('modules/apps_installed.json', 'r') as file:
         info = []
         data = json.load(file)
-        with open(os.path.join(dirx,package,'info.json'),'r') as f:
-            new_path = json.load(f)
-            info.append(new_path['dest_windows'])
-            info.append(new_path['dependency'])
-        data['pkgs'][package] = info
+    blank = open('modules/apps_installed.json', 'w')
+    blank.write("")
+    blank.close()
+    with open('modules/apps_installed.json', 'w') as file:
+        data['pkgs'][package] = os.path.join(dirx,package,'info.json')
         json.dump(data, file,indent=4)
     sprint('CLEAN', 'Limpiando...', Colors.green_to_blue)
     for x in glob.glob(os.path.join(dirx, '*')):
