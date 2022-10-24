@@ -1,5 +1,6 @@
 {
     "utilities": {
-        "mrw10": "https://raw.githubusercontent.com/XtremeTHN/dda_python/main/packages/mrw10-pkg.zip"
+        "mrw10": "https://raw.githubusercontent.com/XtremeTHN/dda_python/main/packages/mrw10-pkg.zip",
+        "pytools": "https://raw.githubusercontent.com/XtremeTHN/dda_python/main/packages/pytools-pkg.zip"
     }
 }
