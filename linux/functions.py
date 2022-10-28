@@ -54,7 +54,7 @@ def main(sprint, package, dat):
                 zip.extractall(os.path.join(apps_fold,'com.' + json.load(app_folder)['name']))
                 with open('modules/configs.json','r+') as file:
                     conf_dict = json.load(file)
-                    conf_dict[package] = os.path.join(dirx,package,'info.json')
+                    conf_dict['apps'][package] = os.path.join(dirx,package,'info.json')
                 with open('modules/configs.json','w') as file:
                     conf = json.dump(conf_dict,file,indent=4)
     except:

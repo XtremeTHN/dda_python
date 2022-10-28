@@ -1,10 +1,17 @@
-import requests, sys
+import requests, sys, argparse, json, os
 from pystyle import Colorate, Colors
 from modules.updatelib import updatelib
-import argparse, json
 def sprint(category,text, color, endx='\n'):
     print(Colorate.Horizontal(color, f'[{category}]'), end='')
     print(f' {text}', end=endx)
+
+if not os.path.exists('modules/configs.json'):
+    with open('modules/configs.json','w') as file:
+        json.dump({
+            'autoupdate_repo':False,
+            'work_dir':os.getcwd(),
+            'apps':{}
+            },file,indent=4)
 
 parser = argparse.ArgumentParser(description="Administrador de paquetes thn22yt.blogspot.com")
 parser.add_argument('-u', '--update', action='store_true', dest='upd_opt',
