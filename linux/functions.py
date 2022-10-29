@@ -6,7 +6,13 @@ import requests, json
 import os
 apps_fold = os.path.join(Path.home(),'.local','share','apps')
 def main(sprint, package, dat):
+    #Revisando si ya esta instalado el paquete, solo toma los datos del archivo de configuracion
     dirx = os.path.join(Path.home(), '.cache', 'dda')
+    app_folder = open(os.path.join(dirx,package,'info.json'),'r')
+    pack = json.load(open('modules/configs.json','r'))
+    for x in pack['apps']:
+        if x == package:
+            sprint('WARN','Paquete ya instalado, se reinstalará',Colors.red_to_purple)
     sprint('INFO', 'Paquete encontrado...', Colors.blue_to_purple)
     sprint('INFO','Obteniendo el tamaño del archivo...',Colors.blue_to_purple,endx='')
     down = requests.get(dat['utilities'][package])
@@ -43,20 +49,20 @@ def main(sprint, package, dat):
                                         elif distro()['NAME'] == 'Debian GNU/Linux':
                                             os.system(f'sudo apt-get install {b}')
                 sprint('INFO', 'Descomprimiendo...', Colors.blue_to_purple)
-                app_folder = open(os.path.join(dirx,package,'info.json'),'r')
-                zip.extractall(os.path.join(apps_fold,'com.' + json.load(app_folder)['name']))
-
+                package_name = json.load(app_folder)['name']
+                zip.extractall(os.path.join(apps_fold,'com.' + package_name))
             elif choice == 'N' or 'n':
+                package_name = json.load(app_folder)['name']
                 sprint('WARN', 'No instalar dependencias puede resultar a un error, obtendras las dependencias que necesitas si vuelves a ejecutar dda con "-pi" y especificando el paquete', Colors.red_to_blue)
                 sprint('INFO', 'Descomprimiendo...', Colors.blue_to_purple)
                 #zip.extractall(json.load(open(os.path.join(dirx,package,'info.json'), 'r'))['dest_linux'].replace('~', str(Path.home())))
-                app_folder = open(os.path.join(dirx,package,'info.json'),'r') 
-                zip.extractall(os.path.join(apps_fold,'com.' + json.load(app_folder)['name']))
+                zip.extractall(os.path.join(apps_fold,'com.' + package_name))
                 with open('modules/configs.json','r+') as file:
                     conf_dict = json.load(file)
-                    conf_dict['apps'][package] = os.path.join(dirx,package,'info.json')
+                    conf_dict['apps'][package] = os.path.join(apps_fold,'com.' + package_name,package,'info.json')
                 with open('modules/configs.json','w') as file:
                     conf = json.dump(conf_dict,file,indent=4)
+                app_folder.close()
     except:
         raise IOError('Error en la creación del archivo')
     finally:
@@ -64,10 +70,12 @@ def main(sprint, package, dat):
 
 def start(pkg,sprint):
     confs = json.load(open(os.path.join('modules','configs.json')))
+    ##temp_path = json.load(open(os.path.join(confs['apps'][])))
     if confs != {}:
-        for x in confs[apps]:
+        path_to_pkg = os.path
+        for x in confs['apps']:
             if x == pkg:
-                os.system(f"./{confs[apps][x]}")
+                os.system(f"./{confs['apps'][x]}")
     else:
         sprint('ERR','No has instalado ningun paquete',Colors.blue_to_purple)
 
