@@ -13,7 +13,7 @@ if not os.path.exists('modules/configs.json'):
             'apps':{}
             },file,indent=4)
 
-parser = argparse.ArgumentParser(description="Administrador de paquetes thn22yt.blogspot.com")
+parser = argparse.ArgumentParser(description="Algunos de los comandos aun no estan completos",epilog='Administrador de paquetes DDA (Descompresor de archivos) DDA Copyright (C) 2022 Axel')
 parser.add_argument('-u', '--update', action='store_true', dest='upd_opt',
                     help="Chequea si hay actualizaciones y si lo hay, actualiza el script")
 parser.add_argument('-i', '--install', choices=('locally', 'web'), dest='inst_opt',
