@@ -1,0 +1,7 @@
+{
+    "autoupdate_repo": false,
+    "work_dir": "/home/axel/gitclones/dda_python",
+    "apps": {
+        "pytools": "/home/axel/.local/share/apps/com.pytools.x86_64-tools/pytools/info.json"
+    }
+}

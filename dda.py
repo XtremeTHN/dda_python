@@ -16,7 +16,7 @@ if not os.path.exists('modules/configs.json'):
 parser = argparse.ArgumentParser(description="Algunos de los comandos aun no estan completos",epilog='Administrador de paquetes DDA (Descompresor de archivos) DDA Copyright (C) 2022 Axel')
 parser.add_argument('-u', '--update', action='store_true', dest='upd_opt',
                     help="Chequea si hay actualizaciones y si lo hay, actualiza el script")
-parser.add_argument('-i', '--install', choices=('locally', 'web'), dest='inst_opt',
+parser.add_argument('-i', '--install', choices=('local', 'web'), dest='inst_opt',
                     help="Instala paquetes descargados desde mi pagina web o localmente")
 parser.add_argument('-s','--start',action='store_true', dest='start_opt',
                     help='Iniciar aplicaciones instaladas')
@@ -60,10 +60,31 @@ if __name__ == "__main__":
                 package = x
         if finded_package:
             if sys.platform == 'linux':
-                from linux.functions import main
+                from linux.functions import install_pkgweb
+                from linux.functions import extractpkg
             elif sys.platform == 'win32':
-                from windows.functions import main
-            main(sprint,package,dat)
+                from windows.functions import install_pkgweb
+                from windows.functions import extractpkg
+            dirx, package2, pack, app_folder,zip_obj = install_pkgweb(sprint,objects.pkg,dat)
+            extractpkg(dirx,package2,pack,app_folder,zip_obj,sprint)
+    if objects.inst_opt == 'local':
+        if os.path.exists(objects.pkg):
+            from pathlib import Path
+            sprint('INFO',f'Instalando {os.path.split(objects.pkg)[1]}...',Colors.blue_to_red)
+            if sys.platform == 'linux':
+                from linux.functions import extractpkg
+                from linux.functions import install_pkglocal
+            elif sys.platform == 'win32':
+                from linux.functions import extractpkg
+                from linux.functions import install_pkglocal
+            dirx = os.path.join(Path.home(), '.cache', 'dda')
+            zip_obj,pkg_name = install_pkglocal(objects.pkg,dirx)
+            app_folder = open(os.path.join(dirx, pkg_name,'info.json'),'r')
+            pack = json.load(open('modules/configs.json','r'))
+            extractpkg(dirx,pkg_name,pack,app_folder,zip_obj,sprint)
+        else:
+            sprint('FATAL','Paquete no encontrado',Colors.red_to_blue)
+            sys.exit(1)
     if objects.start_opt:
         if sys.platform == 'linux':
             from linux.functions import start
