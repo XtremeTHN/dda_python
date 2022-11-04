@@ -1,4 +1,13 @@
-from pystyle import Colorate, Colors
+try:
+    from pystyle import Colors
+except ImportError:
+    class colors():
+        def __init__(self):
+            self.blue_to_red = 'R'
+            self.blue_to_purple = 'P'
+            self.red_to_blue = 'R'
+    Colors = colors()
+
 from pathlib import Path
 from zipfile import ZipFile
 from shutil import copy as cp

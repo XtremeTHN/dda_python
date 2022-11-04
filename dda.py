@@ -1,10 +1,21 @@
 import requests, sys, argparse, json, os
-from pystyle import Colorate, Colors
 from modules.updatelib import updatelib
-def sprint(category,text, color, endx='\n'):
-    print(Colorate.Horizontal(color, f'[{category}]'), end='')
-    print(f' {text}', end=endx)
-
+try:
+    from pystyle import Colorate, Colors
+    def sprint(category,text, color, endx='\n'):
+        print(Colorate.Horizontal(color, f'[{category}]'), end='')
+        print(f' {text}', end=endx)
+except ImportError:
+    print('Pystyle no instalado, se deshabilitaron los colores')
+    def sprint(category,text,color,endx='\n'):
+        print(f'[{category}] {text}', end=endx)
+    class colors():
+        def __init__(self):
+            self.blue_to_red = 'R'
+            self.blue_to_green = 'G'
+            self.blue_to_purple = 'P'
+            self.red_to_blue = 'B'
+    Colors = colors()
 if not os.path.exists('modules/configs.json'):
     with open('modules/configs.json','w') as file:
         json.dump({
@@ -31,7 +42,7 @@ parser.add_argument('-tb','--trouble-shoting', action='store_true',dest='tb',
 
 if __name__ == "__main__":
     objects = parser.parse_args()
-    print(Colorate.Horizontal(Colors.cyan_to_green, "Gestor de paquetes dda"))
+    sprint('Gestor de paquetes DDA','',Colors.blue_to_green)
     if objects.upd_opt:
         sprint("INFO", "Checando actualizaciones...", Colors.blue_to_red)
         new_ver = json.loads(updatelib.get_dict_of_files('https://raw.githubusercontent.com/XtremeTHN/dda_python/main/modules/repo-stable.json', quiet=True).decode("utf-8"))['version']
