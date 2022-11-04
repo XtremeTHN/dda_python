@@ -11,10 +11,10 @@ except ImportError:
         print(f'[{category}] {text}', end=endx)
     class colors():
         def __init__(self):
-            self.blue_to_red = 'R'
-            self.blue_to_green = 'G'
-            self.blue_to_purple = 'P'
-            self.red_to_blue = 'B'
+            self.blue_to_red = None
+            self.blue_to_green = None
+            self.blue_to_purple = None
+            self.red_to_blue = None
     Colors = colors()
 if not os.path.exists('modules/configs.json'):
     with open('modules/configs.json','w') as file:
